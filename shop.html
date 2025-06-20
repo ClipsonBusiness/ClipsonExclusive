@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClipSon Exclusive Shop</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo"><a href="index.html"><img src="images/clipson-logo.png" alt="ClipSon Logo" class="logo-img"></a></div>
+            <div class="nav-links">
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="index.html#interviews" class="nav-link">Student Interviews</a>
+                <a href="index.html#wins" class="nav-link">Student Wins</a>
+                <a href="shop.html" class="nav-link">Shop</a>
+            </div>
+            <a href="https://buy.stripe.com/14A00kgCkh0IcQhg2D5gc02" class="cta-button" target="_blank" rel="noopener">Join ClipSon Exclusive</a>
+        </nav>
+    </header>
+    <main>
+        <section id="proxies" class="shop-section">
+            <h2>Shop</h2>
+            <div class="proxies-grid">
+                <div class="proxy-card">
+                    <h3>Proxy</h3>
+                    <div class="proxy-options">
+                        <label for="proxy-duration">Duration:</label>
+                        <select id="proxy-duration" class="proxy-select">
+                            <option value="1m">1 Month</option>
+                            <option value="3m">3 Months</option>
+                        </select>
+                    </div>
+                    <p class="proxy-price" id="proxy-price">$15/month</p>
+                    <button class="buy-btn" id="proxy-buy-btn">Buy Now</button>
+                </div>
+                <div class="proxy-card">
+                    <h3>Instagram Aged Account</h3>
+                    <p class="proxy-price">$15</p>
+                    <p class="proxy-subtext">US | 2013-2020</p>
+                    <button class="buy-btn" onclick="window.location.href='https://buy.stripe.com/7sYbJ2euc5i0dUlbMn5gc06'">Buy Now</button>
+                </div>
+            </div>
+        </section>
+        <!-- Future: Add Aged Pages section here -->
+    </main>
+    <footer>
+        <p>&copy; 2024 ClipSon Exclusive. All rights reserved.</p>
+    </footer>
+    <script>
+    // Update proxy price and buy button link based on duration
+    const durationSelect = document.getElementById('proxy-duration');
+    const priceDisplay = document.getElementById('proxy-price');
+    const buyBtn = document.getElementById('proxy-buy-btn');
+    function updateProxyPrice() {
+        if (durationSelect.value === '1m') {
+            priceDisplay.textContent = '$15/month';
+            buyBtn.onclick = function() { window.location.href = 'https://buy.stripe.com/3cI00kgCk4dW7vX2bN5gc04'; };
+        } else {
+            priceDisplay.textContent = '$25/3 months';
+            buyBtn.onclick = function() { window.location.href = 'https://buy.stripe.com/cNi3cw0Dm5i09E5cQr5gc05'; };
+        }
+    }
+    durationSelect.addEventListener('change', updateProxyPrice);
+    // Initialize on load
+    updateProxyPrice();
+    </script>
+</body>
+</html> 
