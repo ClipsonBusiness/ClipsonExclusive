@@ -42,14 +42,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetId && targetId.startsWith('#')) {
                 e.preventDefault();
                 const targetSection = document.querySelector(targetId);
-                const headerOffset = 112; // Height of header + price banner
-                const elementPosition = targetSection.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                if (targetSection) {
+                    const headerOffset = 112; // Height of header + price banner
+                    const elementPosition = targetSection.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
             }
             // Otherwise, let the browser handle the navigation (e.g., shop.html)
         });
