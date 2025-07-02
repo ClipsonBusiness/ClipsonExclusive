@@ -72,4 +72,26 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('section').forEach(section => {
         observer.observe(section);
     });
+
+    function updatePriceIncreaseCountdown() {
+        const now = new Date();
+        // Find the next 3-day interval from now
+        const msIn3Days = 3 * 24 * 60 * 60 * 1000;
+        // Epoch time of the next 3-day mark
+        const nextIncrease = new Date(Math.ceil(now.getTime() / msIn3Days) * msIn3Days);
+        let diff = nextIncrease - now;
+        if (diff < 0) diff += msIn3Days; // Just in case
+
+        const days = Math.floor(diff / (24 * 60 * 60 * 1000));
+        const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+        const minutes = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
+        const seconds = Math.floor((diff % (60 * 1000)) / 1000);
+
+        document.getElementById('pi-days').textContent = days;
+        document.getElementById('pi-hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('pi-minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('pi-seconds').textContent = String(seconds).padStart(2, '0');
+    }
+    setInterval(updatePriceIncreaseCountdown, 1000);
+    updatePriceIncreaseCountdown();
 }); 
