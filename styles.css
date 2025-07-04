@@ -112,6 +112,51 @@ section {
     margin-top: -2rem;
 }
 
+.hero-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.clipson-line {
+    font-size: 2.1rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.05;
+    margin-bottom: 0.1em;
+}
+
+.skill-highlight {
+    font-size: 2.3rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+    background: linear-gradient(45deg, #FFD700, #00F5FF 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 12px rgba(0,245,255,0.15);
+    line-height: 1.05;
+}
+
+@media (min-width: 600px) {
+    .hero-title {
+        margin-top: 3.5rem;
+    }
+    .clipson-line, .skill-highlight {
+        font-size: 3.2rem;
+    }
+}
+
+@media (min-width: 900px) {
+    .hero-title {
+        margin-top: 4.5rem;
+    }
+    .clipson-line, .skill-highlight {
+        font-size: 4rem;
+    }
+}
+
 h1 {
     font-size: 4rem;
     margin-bottom: 1rem;
@@ -961,15 +1006,6 @@ a.logo-link {
     letter-spacing: 0.01em;
     margin-left: 0.2rem;
     white-space: nowrap;
-}
-
-.skill-highlight {
-    font-weight: 900;
-    letter-spacing: -1px;
-    background: linear-gradient(45deg, #FFD700, #00F5FF 80%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 12px rgba(0,245,255,0.15);
 }
 
 .master-highlight {
