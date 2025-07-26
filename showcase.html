@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClipSon Affiliate System - Showcase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'gradient': 'gradient 8s linear infinite',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            },
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white/10 backdrop-blur-lg border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-2xl font-bold text-white">ClipSon Affiliate System</h1>
+                    <span class="px-3 py-1 bg-green-500/20 text-green-300 text-sm rounded-full">
+                        Live Demo
+                    </span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="http://localhost:3000/affiliates/login" class="text-purple-400 hover:text-purple-300 transition-colors">
+                        Affiliate Login
+                    </a>
+                    <a href="http://localhost:3000/affiliates/signup" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-2 rounded-lg transition-all duration-200">
+                        Join Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-5xl md:text-7xl font-bold text-white mb-6">
+                The Ultimate
+                <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    Affiliate Platform
+                </span>
+            </h2>
+            <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                Built with Next.js, Prisma, and Stripe Connect. Complete affiliate management 
+                with automated payouts, real-time tracking, and beautiful dashboards.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="http://localhost:3000/affiliates/signup" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 px-8 rounded-lg transition-all duration-200 transform hover:scale-105">
+                    Start Earning Today
+                </a>
+                <a href="#features" class="border border-white/20 text-white hover:bg-white/10 px-8 py-4 rounded-lg transition-all duration-200">
+                    View Features
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 bg-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold text-white mb-2">1,247</div>
+                    <div class="text-gray-300 text-sm mb-1">Total Affiliates</div>
+                    <div class="text-green-400 text-xs">+12% this month</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold text-white mb-2">$45,892</div>
+                    <div class="text-gray-300 text-sm mb-1">Monthly Revenue</div>
+                    <div class="text-green-400 text-xs">+23% this month</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold text-white mb-2">3.2%</div>
+                    <div class="text-gray-300 text-sm mb-1">Conversion Rate</div>
+                    <div class="text-green-400 text-xs">+8% this month</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold text-white mb-2">892</div>
+                    <div class="text-gray-300 text-sm mb-1">Active Referrals</div>
+                    <div class="text-green-400 text-xs">+15% this month</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h3 class="text-4xl font-bold text-white mb-4">
+                    Powerful Features
+                </h3>
+                <p class="text-xl text-gray-300">
+                    Everything you need to run a successful affiliate program
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 hover:border-white/40 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                        🔗
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">Unique Referral Links</h4>
+                    <p class="text-gray-300">Each affiliate gets a custom link like /?ref=username for easy tracking</p>
+                </div>
+
+                <div class="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 hover:border-white/40 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                        📊
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">Real-time Dashboard</h4>
+                    <p class="text-gray-300">Track clicks, sales, earnings, and pending payouts in real-time</p>
+                </div>
+
+                <div class="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 hover:border-white/40 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                        💳
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">Automated Payouts</h4>
+                    <p class="text-gray-300">30% commission automatically calculated and paid via Stripe Connect</p>
+                </div>
+
+                <div class="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 hover:border-white/40 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                        👁️
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">Click Tracking</h4>
+                    <p class="text-gray-300">Monitor every click from your referral links with detailed analytics</p>
+                </div>
+
+                <div class="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 hover:border-white/40 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                        🎯
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">Sales Attribution</h4>
+                    <p class="text-gray-300">Automatic attribution of sales to referring affiliates</p>
+                </div>
+
+                <div class="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 hover:border-white/40 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-lg bg-gradient-to-r from-gray-500 to-slate-500 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                        🔒
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3">Secure Authentication</h4>
+                    <p class="text-gray-300">Protected affiliate accounts with encrypted passwords</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview -->
+    <section class="py-20 bg-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h3 class="text-4xl font-bold text-white mb-4">
+                    Beautiful Dashboard
+                </h3>
+                <p class="text-xl text-gray-300">
+                    Real-time insights and easy payout management
+                </p>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-lg rounded-lg p-8 border border-white/20">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white/10 rounded-lg p-6 border border-white/20">
+                        <h4 class="text-gray-300 text-sm font-medium">Total Earned</h4>
+                        <p class="text-3xl font-bold text-white">$2,847.50</p>
+                    </div>
+                    <div class="bg-white/10 rounded-lg p-6 border border-white/20">
+                        <h4 class="text-gray-300 text-sm font-medium">Pending Payout</h4>
+                        <p class="text-3xl font-bold text-white">$892.25</p>
+                    </div>
+                    <div class="bg-white/10 rounded-lg p-6 border border-white/20">
+                        <h4 class="text-gray-300 text-sm font-medium">Total Clicks</h4>
+                        <p class="text-3xl font-bold text-white">1,247</p>
+                    </div>
+                    <div class="bg-white/10 rounded-lg p-6 border border-white/20">
+                        <h4 class="text-gray-300 text-sm font-medium">Total Sales</h4>
+                        <p class="text-3xl font-bold text-white">23</p>
+                    </div>
+                </div>
+
+                <div class="bg-white/10 rounded-lg p-6 border border-white/20">
+                    <h4 class="text-xl font-bold text-white mb-4">Your Referral Link</h4>
+                    <div class="flex items-center space-x-4">
+                        <input type="text" readonly value="https://clipson.com/?ref=demo_affiliate" class="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white text-sm">
+                        <button onclick="copyToClipboard()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md transition-colors text-sm">
+                            Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h3 class="text-4xl font-bold text-white mb-4">
+                    Built with Modern Tech
+                </h3>
+                <p class="text-xl text-gray-300">
+                    Scalable, secure, and production-ready
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center group">
+                    <div class="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">⚡</div>
+                    <h4 class="text-lg font-bold text-white mb-1">Next.js 14</h4>
+                    <p class="text-gray-400 text-sm">React Framework</p>
+                </div>
+                <div class="text-center group">
+                    <div class="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">🗄️</div>
+                    <h4 class="text-lg font-bold text-white mb-1">Prisma</h4>
+                    <p class="text-gray-400 text-sm">Database ORM</p>
+                </div>
+                <div class="text-center group">
+                    <div class="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">🐘</div>
+                    <h4 class="text-lg font-bold text-white mb-1">PostgreSQL</h4>
+                    <p class="text-gray-400 text-sm">Database</p>
+                </div>
+                <div class="text-center group">
+                    <div class="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">💳</div>
+                    <h4 class="text-lg font-bold text-white mb-1">Stripe Connect</h4>
+                    <p class="text-gray-400 text-sm">Payments</p>
+                </div>
+                <div class="text-center group">
+                    <div class="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">📘</div>
+                    <h4 class="text-lg font-bold text-white mb-1">TypeScript</h4>
+                    <p class="text-gray-400 text-sm">Type Safety</p>
+                </div>
+                <div class="text-center group">
+                    <div class="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">🎨</div>
+                    <h4 class="text-lg font-bold text-white mb-1">Tailwind CSS</h4>
+                    <p class="text-gray-400 text-sm">Styling</p>
+                </div>
+                <div class="text-center group">
+                    <div class="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">🔐</div>
+                    <h4 class="text-lg font-bold text-white mb-1">bcrypt</h4>
+                    <p class="text-gray-400 text-sm">Security</p>
+                </div>
+                <div class="text-center group">
+                    <div class="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">🔗</div>
+                    <h4 class="text-lg font-bold text-white mb-1">Webhooks</h4>
+                    <p class="text-gray-400 text-sm">Real-time</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-gradient-to-r from-purple-600/20 to-pink-600/20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h3 class="text-4xl font-bold text-white mb-6">
+                Ready to Start Earning?
+            </h3>
+            <p class="text-xl text-gray-300 mb-8">
+                Join thousands of affiliates already earning commissions with our platform
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="http://localhost:3000/affiliates/signup" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 px-8 rounded-lg transition-all duration-200 transform hover:scale-105">
+                    Create Affiliate Account
+                </a>
+                <a href="http://localhost:3000/affiliates/login" class="border border-white/20 text-white hover:bg-white/10 px-8 py-4 rounded-lg transition-all duration-200">
+                    Access Dashboard
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-400">
+                © 2024 ClipSon Affiliate System. Built with ❤️ using Next.js and Stripe.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        function copyToClipboard() {
+            const input = document.querySelector('input[readonly]');
+            input.select();
+            document.execCommand('copy');
+            
+            const button = document.querySelector('button');
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            button.classList.add('bg-green-600');
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.classList.remove('bg-green-600');
+            }, 2000);
+        }
+    </script>
+</body>
+</html> 
