@@ -121,7 +121,6 @@ section {
 }
 
 .clipson-line {
-    font-family: 'Montserrat', sans-serif;
     font-size: 2.1rem;
     font-weight: 700;
     letter-spacing: -1px;
@@ -130,9 +129,8 @@ section {
 }
 
 .skill-highlight {
-    font-family: 'Montserrat', sans-serif;
     font-size: 2.3rem;
-    font-weight: 700;
+    font-weight: 900;
     letter-spacing: -1px;
     background: linear-gradient(45deg, #FFD700, #00F5FF 80%);
     -webkit-background-clip: text;
@@ -1082,15 +1080,4 @@ a.logo-link {
     letter-spacing: 0.04em;
     display: flex;
     gap: 0.5rem;
-} 
-
-/* Zapier Chatbot Styles */
-zapier-interfaces-chatbot-embed {
-    position: fixed !important;
-    bottom: 20px !important;
-    right: 20px !important;
-    z-index: 9999 !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
 } 

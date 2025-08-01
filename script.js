@@ -1,57 +1,39 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Countdown Timer - Only run if countdown elements exist
-    const countdownElements = {
-        days: document.getElementById('days'),
-        hours: document.getElementById('hours'),
-        minutes: document.getElementById('minutes'),
-        seconds: document.getElementById('seconds'),
-        miniDays: document.getElementById('mini-days'),
-        miniHours: document.getElementById('mini-hours'),
-        miniMinutes: document.getElementById('mini-minutes'),
-        miniSeconds: document.getElementById('mini-seconds')
-    };
+    // Countdown Timer
+    const countdownDate = new Date();
+    countdownDate.setDate(countdownDate.getDate() + 3); // Set to 3 days from now
 
-    // Check if any countdown elements exist
-    const hasCountdownElements = Object.values(countdownElements).some(el => el !== null);
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = countdownDate - now;
 
-    if (hasCountdownElements) {
-        const countdownDate = new Date();
-        countdownDate.setDate(countdownDate.getDate() + 3); // Set to 3 days from now
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = countdownDate - now;
+        // Update main countdown
+        document.getElementById('days').textContent = String(days).padStart(2, '0');
+        document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        // Update mini countdown
+        document.getElementById('mini-days').textContent = String(days).padStart(2, '0');
+        document.getElementById('mini-hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('mini-minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('mini-seconds').textContent = String(seconds).padStart(2, '0');
 
-            // Update main countdown elements if they exist
-            if (countdownElements.days) countdownElements.days.textContent = String(days).padStart(2, '0');
-            if (countdownElements.hours) countdownElements.hours.textContent = String(hours).padStart(2, '0');
-            if (countdownElements.minutes) countdownElements.minutes.textContent = String(minutes).padStart(2, '0');
-            if (countdownElements.seconds) countdownElements.seconds.textContent = String(seconds).padStart(2, '0');
-
-            // Update mini countdown elements if they exist
-            if (countdownElements.miniDays) countdownElements.miniDays.textContent = String(days).padStart(2, '0');
-            if (countdownElements.miniHours) countdownElements.miniHours.textContent = String(hours).padStart(2, '0');
-            if (countdownElements.miniMinutes) countdownElements.miniMinutes.textContent = String(minutes).padStart(2, '0');
-            if (countdownElements.miniSeconds) countdownElements.miniSeconds.textContent = String(seconds).padStart(2, '0');
-
-            if (distance < 0) {
-                clearInterval(countdownInterval);
-                const countdownSection = document.querySelector('.countdown-section');
-                const priceBanner = document.querySelector('.price-increase-banner');
-                if (countdownSection) countdownSection.style.display = 'none';
-                if (priceBanner) priceBanner.style.display = 'none';
-            }
+        if (distance < 0) {
+            clearInterval(countdownInterval);
+            document.querySelector('.countdown-section').style.display = 'none';
+            document.querySelector('.price-increase-banner').style.display = 'none';
         }
-
-        // Update the countdown every second
-        updateCountdown();
-        const countdownInterval = setInterval(updateCountdown, 1000);
     }
+
+    // Update the countdown every second
+    updateCountdown();
+    const countdownInterval = setInterval(updateCountdown, 1000);
 
     // Smooth scroll for navigation
     document.querySelectorAll('.nav-link, .logo-link').forEach(link => {
@@ -91,37 +73,25 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(section);
     });
 
-    // Price Increase Countdown - Only run if elements exist
-    const priceIncreaseElements = {
-        piDays: document.getElementById('pi-days'),
-        piHours: document.getElementById('pi-hours'),
-        piMinutes: document.getElementById('pi-minutes'),
-        piSeconds: document.getElementById('pi-seconds')
-    };
+    function updatePriceIncreaseCountdown() {
+        const now = new Date();
+        // Find the next 3-day interval from now
+        const msIn3Days = 3 * 24 * 60 * 60 * 1000;
+        // Epoch time of the next 3-day mark
+        const nextIncrease = new Date(Math.ceil(now.getTime() / msIn3Days) * msIn3Days);
+        let diff = nextIncrease - now;
+        if (diff < 0) diff += msIn3Days; // Just in case
 
-    const hasPriceIncreaseElements = Object.values(priceIncreaseElements).some(el => el !== null);
+        const days = Math.floor(diff / (24 * 60 * 60 * 1000));
+        const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+        const minutes = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
+        const seconds = Math.floor((diff % (60 * 1000)) / 1000);
 
-    if (hasPriceIncreaseElements) {
-        function updatePriceIncreaseCountdown() {
-            const now = new Date();
-            // Find the next 3-day interval from now
-            const msIn3Days = 3 * 24 * 60 * 60 * 1000;
-            // Epoch time of the next 3-day mark
-            const nextIncrease = new Date(Math.ceil(now.getTime() / msIn3Days) * msIn3Days);
-            let diff = nextIncrease - now;
-            if (diff < 0) diff += msIn3Days; // Just in case
-
-            const days = Math.floor(diff / (24 * 60 * 60 * 1000));
-            const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-            const minutes = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
-            const seconds = Math.floor((diff % (60 * 1000)) / 1000);
-
-            if (priceIncreaseElements.piDays) priceIncreaseElements.piDays.textContent = days;
-            if (priceIncreaseElements.piHours) priceIncreaseElements.piHours.textContent = String(hours).padStart(2, '0');
-            if (priceIncreaseElements.piMinutes) priceIncreaseElements.piMinutes.textContent = String(minutes).padStart(2, '0');
-            if (priceIncreaseElements.piSeconds) priceIncreaseElements.piSeconds.textContent = String(seconds).padStart(2, '0');
-        }
-        setInterval(updatePriceIncreaseCountdown, 1000);
-        updatePriceIncreaseCountdown();
+        document.getElementById('pi-days').textContent = days;
+        document.getElementById('pi-hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('pi-minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('pi-seconds').textContent = String(seconds).padStart(2, '0');
     }
+    setInterval(updatePriceIncreaseCountdown, 1000);
+    updatePriceIncreaseCountdown();
 }); 
