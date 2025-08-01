@@ -9,6 +9,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="images/clipson-logo.png">
+    
+    <!-- Trackdesk tracker begin -->
+    <script async src="//cdn.trackdesk.com/tracking.js"></script> 
+    <script>
+    (function(t,d,k){(t[k]=t[k]||[]).push(d);t[d]=t[d]||t[k].f||function(){(t[d].q=t[d].q||[]).push(arguments)}})(window,"trackdesk","TrackdeskObject"); 
+    
+    trackdesk('clipson', 'click');
+    </script>
+    <!-- Trackdesk tracker end -->
 </head>
 <body id="top">
     <div class="gradient-waves-bg"></div>
@@ -184,5 +193,26 @@
     </footer>
 
     <script src="script.js?v=1.3"></script>
+    
+    <!-- Trackdesk set client_reference_id help fuction begin -->
+    <script>
+    (function () {
+        var cookie = document.cookie.match('(^|;)\strakdesk_cid\s=\s*([^;]+)');
+        if (Array.isArray(cookie)) {
+            try {
+                var trakdeskCid = JSON.parse(cookie.pop());
+                var cid = trakdeskCid['cid'];
+                document.querySelectorAll('a[href^="https://buy.stripe.com/"]').forEach(function (a) {
+                    var url = new URL(a.href);
+                    url.searchParams.set('client_reference_id', cid);
+                    a.href = url.href;
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    })();
+    </script>
+    <!-- Trackdesk set client_reference_id help fuction end -->
 </body>
 </html> 
