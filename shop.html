@@ -6,6 +6,15 @@
     <title>ClipSon Exclusive Shop</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Trackdesk tracker begin -->
+    <script async src="//cdn.trackdesk.com/tracking.js"></script> 
+    <script>
+    (function(t,d,k){(t[k]=t[k]||[]).push(d);t[d]=t[d]||t[k].f||function(){(t[d].q=t[d].q||[]).push(arguments)}})(window,"trackdesk","TrackdeskObject"); 
+    
+    trackdesk('clipson', 'click');
+    </script>
+    <!-- Trackdesk tracker end -->
 </head>
 <body>
     <header>
@@ -37,10 +46,10 @@
                     <button class="buy-btn" id="proxy-buy-btn">Buy Now</button>
                 </div>
                 <div class="proxy-card">
-                    <h3>Aged Instagram - Trials activated</h3>
-                    <p class="proxy-price">$30</p>
+                    <h3>Aged Instagram Page</h3>
+                    <p class="proxy-price">$25</p>
                     <p class="proxy-subtext">Premium aged accounts with trials</p>
-                    <button class="buy-btn" onclick="window.location.href='https://buy.stripe.com/3cI4gA4TCfWEcQhcQr5gc08'">Buy Now</button>
+                    <button class="buy-btn" onclick="window.location.href='https://buy.stripe.com/8x228seucfWE5nP03F5gc09'">Buy Now</button>
                 </div>
             </div>
         </section>
@@ -67,5 +76,26 @@
     // Initialize on load
     updateProxyPrice();
     </script>
+    
+    <!-- Trackdesk set client_reference_id help fuction begin -->
+    <script>
+    (function () {
+        var cookie = document.cookie.match('(^|;)\strakdesk_cid\s=\s*([^;]+)');
+        if (Array.isArray(cookie)) {
+            try {
+                var trakdeskCid = JSON.parse(cookie.pop());
+                var cid = trakdeskCid['cid'];
+                document.querySelectorAll('a[href^="https://buy.stripe.com/"]').forEach(function (a) {
+                    var url = new URL(a.href);
+                    url.searchParams.set('client_reference_id', cid);
+                    a.href = url.href;
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    })();
+    </script>
+    <!-- Trackdesk set client_reference_id help fuction end -->
 </body>
 </html> 
