@@ -80,19 +80,25 @@
     <!-- Trackdesk set client_reference_id help fuction begin -->
     <script>
     (function () {
-        var cookie = document.cookie.match('(^|;)\strakdesk_cid\s=\s*([^;]+)');
+        var cookie = document.cookie.match('(^|;)\\s*trakdesk_cid\\s*=\\s*([^;]+)');
         if (Array.isArray(cookie)) {
             try {
                 var trakdeskCid = JSON.parse(cookie.pop());
                 var cid = trakdeskCid['cid'];
+                console.log('Trackdesk CID found:', cid);
+                
                 document.querySelectorAll('a[href^="https://buy.stripe.com/"]').forEach(function (a) {
+                    var originalUrl = a.href;
                     var url = new URL(a.href);
                     url.searchParams.set('client_reference_id', cid);
                     a.href = url.href;
+                    console.log('Payment link updated:', originalUrl, '→', a.href);
                 });
             } catch (e) {
-                console.log(e);
+                console.log('Trackdesk error:', e);
             }
+        } else {
+            console.log('No Trackdesk CID cookie found');
         }
     })();
     </script>
