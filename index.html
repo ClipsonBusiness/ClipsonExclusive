@@ -18,8 +18,48 @@
     trackdesk('clipson', 'click');
     </script>
     <!-- Trackdesk tracker end -->
+    
+    <!-- Tracking Link Redirect Script -->
+    <script>
+    (function() {
+      // Only run on your custom domain
+      if (window.location.hostname !== 'clipsonexclusive.com' && 
+          window.location.hostname !== 'www.clipsonexclusive.com') {
+        return;
+      }
+
+      // Check for ?ref= query parameter first (e.g., /?ref=xxxx)
+      const urlParams = new URLSearchParams(window.location.search);
+      const refParam = urlParams.get('ref');
+      
+      if (refParam) {
+        // Redirect with ?ref= parameter
+        const trackingUrl = 'https://tracking-system-production-d23c.up.railway.app/?ref=' + refParam;
+        window.location.href = trackingUrl;
+        return;
+      }
+
+      // Get the current path (e.g., /ref=xxxx or /xxxxx)
+      const path = window.location.pathname;
+      
+      // Skip if it's a root path or common paths
+      if (path === '/' || path.startsWith('/api/') || path.startsWith('/_next/')) {
+        return;
+      }
+
+      // Extract slug from path (remove leading slash)
+      const slug = path.substring(1);
+      
+      // If there's a slug, redirect to tracking server
+      if (slug && slug.length > 0) {
+        const trackingUrl = 'https://tracking-system-production-d23c.up.railway.app/' + slug + window.location.search;
+        window.location.href = trackingUrl;
+      }
+    })();
+    </script>
 </head>
 <body id="top">
+    
     <div class="gradient-waves-bg"></div>
     <div class="banner-navbar-gap"></div>
 
@@ -221,4 +261,4 @@
     </script>
     <!-- Trackdesk set client_reference_id help fuction end -->
 </body>
-</html> 
+</html>
