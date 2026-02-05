@@ -19,41 +19,41 @@
     </script>
     <!-- Trackdesk tracker end -->
     
-    <!-- Tracking Link Redirect Script -->
+    <!-- Clipson Affiliate Tracking -->
     <script>
     (function() {
-      // Only run on your custom domain
-      if (window.location.hostname !== 'clipsonexclusive.com' && 
-          window.location.hostname !== 'www.clipsonexclusive.com') {
-        return;
-      }
+      // Only run on the client's domain
+      const hostname = window.location.hostname;
+      const domainMatch = hostname === 'clipsonexclusive.com' || hostname === 'www.clipsonexclusive.com';
+      if (!domainMatch) return;
 
-      // Check for ?ref= query parameter first (e.g., /?ref=xxxx)
+      // Check for ?ref= parameter
       const urlParams = new URLSearchParams(window.location.search);
       const refParam = urlParams.get('ref');
       
-      if (refParam) {
-        // Redirect with ?ref= parameter
-        const trackingUrl = 'https://tracking-system-production-d23c.up.railway.app/?ref=' + refParam;
-        window.location.href = trackingUrl;
-        return;
-      }
+      if (!refParam) return;
 
-      // Get the current path (e.g., /ref=xxxx or /xxxxx)
-      const path = window.location.pathname;
-      
-      // Skip if it's a root path or common paths
-      if (path === '/' || path.startsWith('/api/') || path.startsWith('/_next/')) {
-        return;
-      }
+      // Set cookie on client's domain (90 days expiry)
+      // This cookie will be available when user reaches Stripe checkout
+      const expiryDays = 90;
+      const expiryDate = new Date();
+      expiryDate.setTime(expiryDate.getTime() + (expiryDays * 24 * 60 * 60 * 1000));
+      document.cookie = 'ca_affiliate_id=' + encodeURIComponent(refParam) + 
+        '; expires=' + expiryDate.toUTCString() + 
+        '; path=/' + 
+        '; SameSite=Lax' + 
+        (location.protocol === 'https:' ? '; Secure' : '');
 
-      // Extract slug from path (remove leading slash)
-      const slug = path.substring(1);
-      
-      // If there's a slug, redirect to tracking server
-      if (slug && slug.length > 0) {
-        const trackingUrl = 'https://tracking-system-production-d23c.up.railway.app/' + slug + window.location.search;
-        window.location.href = trackingUrl;
+      // Optionally record click on tracking server (non-blocking)
+      const beaconUrl = 'https://www.clipsonaffiliates.com/track?ref=' + encodeURIComponent(refParam) + '&beacon=true';
+      if (navigator.sendBeacon) {
+        try {
+          navigator.sendBeacon(beaconUrl);
+        } catch(e) {
+          fetch(beaconUrl, { method: 'GET', keepalive: true, mode: 'no-cors' }).catch(() => {});
+        }
+      } else {
+        fetch(beaconUrl, { method: 'GET', keepalive: true, mode: 'no-cors' }).catch(() => {});
       }
     })();
     </script>
