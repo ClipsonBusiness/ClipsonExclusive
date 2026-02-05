@@ -124,4 +124,45 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(updatePriceIncreaseCountdown, 1000);
         updatePriceIncreaseCountdown();
     }
+
+    // Stripe Checkout Integration
+    async function createCheckout() {
+        try {
+            const response = await fetch('/api/create-checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include', // Include cookies in request
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create checkout session');
+            }
+
+            const data = await response.json();
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                throw new Error('No checkout URL returned');
+            }
+        } catch (error) {
+            console.error('Error creating checkout:', error);
+            alert('Failed to start checkout. Please try again.');
+        }
+    }
+
+    // Attach checkout handler to all checkout buttons
+    document.querySelectorAll('.checkout-btn, [data-checkout]').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            this.disabled = true;
+            const originalText = this.textContent;
+            this.textContent = 'Loading...';
+            createCheckout().finally(() => {
+                this.disabled = false;
+                this.textContent = originalText;
+            });
+        });
+    });
 }); 
