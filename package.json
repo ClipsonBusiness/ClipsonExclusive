@@ -1,0 +1,16 @@
+{
+  "name": "clipsonexclusive",
+  "version": "1.0.0",
+  "description": "ClipSon Exclusive website with Stripe Checkout integration",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required for static site'"
+  },
+  "dependencies": {
+    "stripe": "^14.21.0"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}
