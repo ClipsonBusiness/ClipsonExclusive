@@ -137,7 +137,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to create checkout session');
+                const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+                console.error('API Error:', response.status, errorData);
+                throw new Error(errorData.message || errorData.error || 'Failed to create checkout session');
             }
 
             const data = await response.json();
@@ -148,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             console.error('Error creating checkout:', error);
-            alert('Failed to start checkout. Please try again.');
+            alert('Failed to start checkout: ' + error.message + '\n\nCheck the browser console for details.');
         }
     }
 

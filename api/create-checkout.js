@@ -5,6 +5,15 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Check if Stripe key is configured
+  if (!process.env.STRIPE_SECRET_KEY) {
+    console.error('STRIPE_SECRET_KEY is not set');
+    return res.status(500).json({ 
+      error: 'Server configuration error',
+      message: 'STRIPE_SECRET_KEY environment variable is not set'
+    });
+  }
+
   try {
     const cookies = req.headers.cookie || '';
     const cookieMatch = cookies.match(/(?:^|;\s*)ca_affiliate_id=([^;]*)/);
