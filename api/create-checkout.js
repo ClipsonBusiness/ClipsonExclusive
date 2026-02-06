@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
           quantity: 1,
         },
       ],
-      mode: 'payment',
+      mode: 'subscription',
       success_url: `${req.headers.origin || 'https://www.clipsonexclusive.com'}/?success=true`,
       cancel_url: `${req.headers.origin || 'https://www.clipsonexclusive.com'}/?canceled=true`,
       metadata: affiliateId ? {
