@@ -6,5 +6,6 @@
       "source": "/api/(.*)",
       "destination": "/api/$1"
     }
-  ]
+  ],
+  "comment": "Redeploy to pick up STRIPE_SECRET_KEY environment variable"
 }
