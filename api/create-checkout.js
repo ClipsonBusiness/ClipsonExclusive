@@ -38,6 +38,11 @@ module.exports = async (req, res) => {
       metadata: affiliateId ? {
         ca_affiliate_id: affiliateId,
       } : {},
+      subscription_data: {
+        metadata: affiliateId ? {
+          ca_affiliate_id: affiliateId,
+        } : {},
+      },
     });
 
     console.log('Checkout session created:', {
