@@ -128,6 +128,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Stripe Checkout Integration
     async function createCheckout() {
         try {
+            // Check if affiliate cookie exists (for debugging)
+            const cookies = document.cookie;
+            const hasAffiliateCookie = cookies.includes('ca_affiliate_id');
+            console.log('Creating checkout...');
+            console.log('Affiliate cookie present:', hasAffiliateCookie);
+            if (hasAffiliateCookie) {
+                const match = cookies.match(/ca_affiliate_id=([^;]*)/);
+                console.log('Affiliate ID:', match ? decodeURIComponent(match[1]) : 'Not found');
+            }
+
             const response = await fetch('/api/create-checkout', {
                 method: 'POST',
                 headers: {

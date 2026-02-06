@@ -19,6 +19,11 @@ module.exports = async (req, res) => {
     const cookieMatch = cookies.match(/(?:^|;\s*)ca_affiliate_id=([^;]*)/);
     const affiliateId = cookieMatch ? decodeURIComponent(cookieMatch[1]) : null;
 
+    // Log for debugging (visible in Vercel logs)
+    console.log('Creating checkout session...');
+    console.log('Cookies received:', cookies ? 'Yes' : 'No');
+    console.log('Affiliate ID found:', affiliateId || 'None');
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -33,6 +38,12 @@ module.exports = async (req, res) => {
       metadata: affiliateId ? {
         ca_affiliate_id: affiliateId,
       } : {},
+    });
+
+    console.log('Checkout session created:', {
+      sessionId: session.id,
+      metadata: session.metadata,
+      url: session.url
     });
 
     return res.status(200).json({ url: session.url });
