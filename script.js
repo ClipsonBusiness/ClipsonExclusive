@@ -153,6 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = await response.json();
+            console.log('✅ Checkout session created successfully:', data.url);
             if (data.url) {
                 window.location.href = data.url;
             } else {
