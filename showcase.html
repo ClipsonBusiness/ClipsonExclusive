@@ -54,6 +54,12 @@
         '; SameSite=Lax' + 
         (location.protocol === 'https:' ? '; Secure' : '');
 
+      // Log for debugging
+      console.log('✅ Affiliate tracking: Cookie set', {
+        affiliateId: refParam,
+        cookie: 'ca_affiliate_id=' + encodeURIComponent(refParam)
+      });
+
       // Optionally record click on tracking server (non-blocking)
       const beaconUrl = 'https://www.clipsonaffiliates.com/track?ref=' + encodeURIComponent(refParam) + '&beacon=true';
       if (navigator.sendBeacon) {
