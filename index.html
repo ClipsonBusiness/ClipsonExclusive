@@ -21,63 +21,101 @@
     
     <!-- Affiliate Tracking Script - Stores ref and sends tracking event -->
     <script>
-    (function() {
-      // Get ref parameter from URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const ref = urlParams.get('ref');
-      
-      if (ref) {
-        // Store affiliate ID in localStorage (expires in 30 days)
-        const expiryDate = new Date();
-        expiryDate.setTime(expiryDate.getTime() + (30 * 24 * 60 * 60 * 1000));
-        localStorage.setItem('affiliate_ref', ref);
-        localStorage.setItem('affiliate_ref_expiry', expiryDate.getTime().toString());
-        
-        // Send click tracking to ClipSon Affiliates API (cross-domain tracking)
-        const clickData = {
-          campaignId: '1770600294862',
-          affiliateId: ref,
-          url: window.location.href,
-          referrer: document.referrer,
-          timestamp: new Date().toISOString(),
-          country: null, // Can be enhanced with geolocation API
-          device: /Mobile|Android|iPhone|iPad/.test(navigator.userAgent) ? 'Mobile' : 'Desktop'
-        };
-        
-        // Send to ClipSon Affiliates API - FIXED: URL must be on one line
-        fetch('https://clipsonaffiliates.com/api/track/click', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(clickData)
-        }).catch(err => console.error('Tracking error:', err));
-      }
-      
-      // Check if stored affiliate ref has expired
-      const storedRef = localStorage.getItem('affiliate_ref');
-      const expiry = localStorage.getItem('affiliate_ref_expiry');
-      if (storedRef && expiry && new Date().getTime() > parseInt(expiry)) {
-        localStorage.removeItem('affiliate_ref');
-        localStorage.removeItem('affiliate_ref_expiry');
-      }
-    })();
+    (function () {
+      'use strict';
 
-    // Helper function to get affiliate ID for Stripe Checkout metadata
-    // Usage: const affiliateId = window.getAffiliateId();
-    window.getAffiliateId = function() {
-      const storedRef = localStorage.getItem('affiliate_ref');
-      const expiry = localStorage.getItem('affiliate_ref_expiry');
-      
-      // Check if expired
-      if (storedRef && expiry && new Date().getTime() > parseInt(expiry)) {
-        localStorage.removeItem('affiliate_ref');
-        localStorage.removeItem('affiliate_ref_expiry');
-        return null;
+      // ==============================
+      // CONFIG (only edit these)
+      // ==============================
+      var TRACKING_ENDPOINT = 'https://clipsonaffiliates.com/api/affiliate/click';
+      var COOKIE_DAYS = 30;
+      var STORAGE_KEY = '__affiliate_data__';
+      var SESSION_KEY = '__affiliate_click_sent__';
+
+      // ==============================
+      // HELPERS
+      // ==============================
+      function now() {
+        return Date.now();
       }
-      
-      return storedRef || null;
-    };
+
+      function parseJSON(value) {
+        try { return JSON.parse(value); } catch { return null; }
+      }
+
+      function getStoredAffiliate() {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+
+        var data = parseJSON(raw);
+        if (!data || now() > data.expiresAt) {
+          localStorage.removeItem(STORAGE_KEY);
+          return null;
+        }
+        return data;
+      }
+
+      function saveAffiliate(data) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      }
+
+      function getParam(name) {
+        return new URLSearchParams(window.location.search).get(name);
+      }
+
+      // ==============================
+      // MAIN LOGIC
+      // ==============================
+
+      // Cleanup expired data
+      getStoredAffiliate();
+
+      var affiliateId = getParam('ref');
+
+      // Only fire once per session
+      if (affiliateId && !sessionStorage.getItem(SESSION_KEY)) {
+        sessionStorage.setItem(SESSION_KEY, '1');
+
+        var payload = {
+          affiliateId: affiliateId,
+          landingPage: window.location.href,
+          referrer: document.referrer || null,
+          userAgent: navigator.userAgent,
+          language: navigator.language,
+          screen: window.screen.width + 'x' + window.screen.height,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          timestamp: new Date().toISOString()
+        };
+
+        // Persist affiliate attribution
+        saveAffiliate({
+          affiliateId: affiliateId,
+          firstTouch: now(),
+          expiresAt: now() + COOKIE_DAYS * 86400000
+        });
+
+        // First-party click tracking (hard to block)
+        fetch(TRACKING_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          keepalive: true
+        }).catch(function () {});
+      }
+
+      // ==============================
+      // STRIPE HELPER (GLOBAL)
+      // ==============================
+      window.getAffiliateMetadata = function () {
+        var data = getStoredAffiliate();
+        if (!data) return {};
+
+        return {
+          affiliateId: data.affiliateId,
+          affiliateFirstTouch: String(data.firstTouch)
+        };
+      };
+    })();
     </script>
     
     <!-- Tracking Link Redirect Script (for non-ref paths) -->
@@ -306,8 +344,9 @@
             }
         }
         
-        // Get Affiliate ID
-        var affiliateId = window.getAffiliateId ? window.getAffiliateId() : null;
+        // Get Affiliate Metadata
+        var affiliateData = window.getAffiliateMetadata ? window.getAffiliateMetadata() : {};
+        var affiliateId = affiliateData.affiliateId || null;
         if (affiliateId) {
             console.log('Affiliate ID found:', affiliateId);
         }
