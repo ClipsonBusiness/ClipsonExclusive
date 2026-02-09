@@ -35,7 +35,7 @@
         
         // Send click tracking to ClipSon Affiliates API (cross-domain tracking)
         const clickData = {
-          campaignId: '1770595074535',
+          campaignId: '1770600294862',
           affiliateId: ref,
           url: window.location.href,
           referrer: document.referrer,
@@ -44,8 +44,8 @@
           device: /Mobile|Android|iPhone|iPad/.test(navigator.userAgent) ? 'Mobile' : 'Desktop'
         };
         
-        // Send to ClipSon Affiliates API
-        fetch('http://localhost:3000/api/track/click', {
+        // Send to ClipSon Affiliates API - FIXED: URL must be on one line
+        fetch('https://clipsonaffiliates.com/api/track/click', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
