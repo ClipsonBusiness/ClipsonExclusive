@@ -33,19 +33,24 @@
         localStorage.setItem('affiliate_ref', ref);
         localStorage.setItem('affiliate_ref_expiry', expiryDate.getTime().toString());
         
-        // Send tracking event to ClipSon Affiliates
-        fetch('https://clipsonaffiliates.com/api/track/click', {
+        // Send click tracking to ClipSon Affiliates API (cross-domain tracking)
+        const clickData = {
+          campaignId: '1770595074535',
+          affiliateId: ref,
+          url: window.location.href,
+          referrer: document.referrer,
+          timestamp: new Date().toISOString(),
+          country: null, // Can be enhanced with geolocation API
+          device: /Mobile|Android|iPhone|iPad/.test(navigator.userAgent) ? 'Mobile' : 'Desktop'
+        };
+        
+        // Send to ClipSon Affiliates API
+        fetch('http://localhost:3000/api/track/click', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            campaignId: '1770596668843',
-            affiliateId: ref,
-            url: window.location.href,
-            referrer: document.referrer,
-            timestamp: new Date().toISOString()
-          })
+          body: JSON.stringify(clickData)
         }).catch(err => console.error('Tracking error:', err));
       }
       
