@@ -16,258 +16,86 @@
     </script>
     <!-- Trackdesk tracker end -->
     
-    <!-- Affiliate Tracking Script - Stores ref and sends tracking event -->
-    <script>
-    (function () {
-      'use strict';
-
-      // ==============================
-      // CONFIG (only edit these)
-      // ==============================
-      var TRACKING_ENDPOINT = 'https://clipson-affiliates.vercel.app/api/track/click';
-      var COOKIE_DAYS = 30;
-      var STORAGE_KEY = '__affiliate_data__';
-      var SESSION_KEY = '__affiliate_click_sent__';
-      var CAMPAIGN_ID = '1770600294862';
-
-      // ==============================
-      // HELPERS
-      // ==============================
-      function now() {
-        return Date.now();
-      }
-
-      function parseJSON(value) {
-        try { return JSON.parse(value); } catch { return null; }
-      }
-
-      function getStoredAffiliate() {
-        var raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return null;
-
-        var data = parseJSON(raw);
-        if (!data || now() > data.expiresAt) {
-          localStorage.removeItem(STORAGE_KEY);
-          return null;
-        }
-        return data;
-      }
-
-      function saveAffiliate(data) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      }
-
-      function getParam(name) {
-        return new URLSearchParams(window.location.search).get(name);
-      }
-
-      // ==============================
-      // MAIN LOGIC
-      // ==============================
-
-      // Cleanup expired data
-      getStoredAffiliate();
-
-      var affiliateId = getParam('ref');
-
-      // Only fire once per session
-      if (affiliateId && !sessionStorage.getItem(SESSION_KEY)) {
-        sessionStorage.setItem(SESSION_KEY, '1');
-
-        var payload = {
-          campaignId: CAMPAIGN_ID,
-          affiliateId: affiliateId,
-          url: window.location.href,
-          landingPage: window.location.href,
-          referrer: document.referrer || null,
-          userAgent: navigator.userAgent,
-          language: navigator.language,
-          screen: window.screen.width + 'x' + window.screen.height,
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          timestamp: new Date().toISOString(),
-          device: /Mobile|Android|iPhone|iPad/.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
-          country: null
-        };
-
-        // Persist affiliate attribution
-        saveAffiliate({
-          affiliateId: affiliateId,
-          firstTouch: now(),
-          expiresAt: now() + COOKIE_DAYS * 86400000
-        });
-
-        // First-party click tracking (hard to block)
-        fetch(TRACKING_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          keepalive: true
-        }).catch(function () {});
-      }
-
-      // ==============================
-      // STRIPE HELPER (GLOBAL)
-      // ==============================
-      window.getAffiliateMetadata = function () {
-        var data = getStoredAffiliate();
-        if (!data) return {};
-
-        return {
-          affiliateId: data.affiliateId,
-          affiliateFirstTouch: String(data.firstTouch)
-        };
-      };
-
-      // Legacy helper for backward compatibility
-      window.getAffiliateId = function() {
-        var data = getStoredAffiliate();
-        return data ? data.affiliateId : null;
-      };
-    })();
-    </script>
-    
-    <!-- Tracking Link Redirect Script (for non-ref paths) -->
+    <!-- Clipson Affiliate Tracking -->
     <script>
     (function() {
-      // Only run on your custom domain
-      if (window.location.hostname !== 'clipsonexclusive.com' && 
-          window.location.hostname !== 'www.clipsonexclusive.com') {
-        return;
-      }
+      // Only run on the client's domain
+      const hostname = window.location.hostname;
+      const domainMatch = hostname === 'clipsonexclusive.com' || hostname === 'www.clipsonexclusive.com';
+      if (!domainMatch) return;
 
-      // Skip redirect if there's a ref parameter (already handled above)
+      // Check for ?ref= parameter
       const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('ref')) {
-        return; // Don't redirect, let the tracking script handle it
-      }
-
-      // Get the current path (e.g., /ref=xxxx or /xxxxx)
-      const path = window.location.pathname;
+      const refParam = urlParams.get('ref');
       
-      // Skip if it's a root path or common paths
-      if (path === '/' || path.startsWith('/api/') || path.startsWith('/_next/')) {
-        return;
-      }
+      if (!refParam) return;
 
-      // Extract slug from path (remove leading slash)
-      const slug = path.substring(1);
-      
-      // If there's a slug, redirect to tracking server
-      if (slug && slug.length > 0) {
-        const trackingUrl = 'https://tracking-system-production-d23c.up.railway.app/' + slug + window.location.search;
-        window.location.href = trackingUrl;
+      // Set cookie on client's domain (90 days expiry)
+      // This cookie will be available when user reaches Stripe checkout
+      const expiryDays = 90;
+      const expiryDate = new Date();
+      expiryDate.setTime(expiryDate.getTime() + (expiryDays * 24 * 60 * 60 * 1000));
+      document.cookie = 'ca_affiliate_id=' + encodeURIComponent(refParam) + 
+        '; expires=' + expiryDate.toUTCString() + 
+        '; path=/' + 
+        '; SameSite=Lax' + 
+        (location.protocol === 'https:' ? '; Secure' : '');
+
+      // Optionally record click on tracking server (non-blocking)
+      const beaconUrl = 'https://www.clipsonaffiliates.com/track?ref=' + encodeURIComponent(refParam) + '&beacon=true';
+      if (navigator.sendBeacon) {
+        try {
+          navigator.sendBeacon(beaconUrl);
+        } catch(e) {
+          fetch(beaconUrl, { method: 'GET', keepalive: true, mode: 'no-cors' }).catch(() => {});
+        }
+      } else {
+        fetch(beaconUrl, { method: 'GET', keepalive: true, mode: 'no-cors' }).catch(() => {});
       }
     })();
     </script>
 </head>
 <body>
+    <div class="gradient-waves-bg"></div>
+    <div class="bg-lines-lights" aria-hidden="true"></div>
     <header>
         <nav>
             <div class="logo"><a href="index.html"><img src="images/clipson-logo.png" alt="ClipSon Logo" class="logo-img"></a></div>
             <div class="nav-links">
                 <a href="index.html#features" class="nav-link">Features</a>
-                <a href="index.html#interviews" class="nav-link">Student Interviews</a>
                 <a href="index.html#wins" class="nav-link">Student Wins</a>
-                <a href="shop.html" class="nav-link">Shop</a>
             </div>
-            <a href="https://buy.stripe.com/14A00kgCkh0IcQhg2D5gc02" class="cta-button" target="_blank" rel="noopener">Join ClipSon Exclusive</a>
+            <a href="https://buy.stripe.com/5kQeVegCk6m417zaIj5gc0l" class="cta-button" target="_blank" rel="noopener">Join ClipSon Exclusive</a>
         </nav>
     </header>
-    <main>
-        <section id="proxies" class="shop-section">
-            <h2>Shop</h2>
-            <div class="proxies-grid">
-                <div class="proxy-card">
-                    <h3>Proxy</h3>
-                    <div class="proxy-options">
-                        <label for="proxy-duration">Duration:</label>
-                        <select id="proxy-duration" class="proxy-select">
-                            <option value="1m">1 Month</option>
-                            <option value="3m">3 Months</option>
-                        </select>
-                    </div>
-                    <p class="proxy-price" id="proxy-price">$15/month</p>
-                    <button class="buy-btn" id="proxy-buy-btn">Buy Now</button>
-                </div>
-                <div class="proxy-card">
-                    <h3>Aged Instagram Page</h3>
-                    <p class="proxy-price">$25</p>
-                    <p class="proxy-subtext">Premium aged accounts with trials</p>
-                    <button class="buy-btn" onclick="window.location.href='https://buy.stripe.com/8x228seucfWE5nP03F5gc09'">Buy Now</button>
-                </div>
-            </div>
-        </section>
-        <!-- Future: Add Aged Pages section here -->
-    </main>
     <footer>
         <p>&copy; 2024 ClipSon Exclusive. All rights reserved.</p>
     </footer>
-    <script>
-    // Update proxy price and buy button link based on duration
-    const durationSelect = document.getElementById('proxy-duration');
-    const priceDisplay = document.getElementById('proxy-price');
-    const buyBtn = document.getElementById('proxy-buy-btn');
-    function updateProxyPrice() {
-        if (durationSelect.value === '1m') {
-            priceDisplay.textContent = '$15/month';
-            buyBtn.onclick = function() { window.location.href = 'https://buy.stripe.com/3cI00kgCk4dW7vX2bN5gc04'; };
-        } else {
-            priceDisplay.textContent = '$25/3 months';
-            buyBtn.onclick = function() { window.location.href = 'https://buy.stripe.com/cNi3cw0Dm5i09E5cQr5gc05'; };
-        }
-    }
-    durationSelect.addEventListener('change', updateProxyPrice);
-    // Initialize on load
-    updateProxyPrice();
-    </script>
-    
-    <!-- Trackdesk set client_reference_id + Affiliate ID to Stripe links -->
+    <!-- Trackdesk set client_reference_id help fuction begin -->
     <script>
     (function () {
-        // Get Trackdesk CID
         var cookie = document.cookie.match('(^|;)\\s*trakdesk_cid\\s*=\\s*([^;]+)');
-        var trackdeskCid = null;
         if (Array.isArray(cookie)) {
             try {
-                var trakdeskCidObj = JSON.parse(cookie.pop());
-                trackdeskCid = trakdeskCidObj['cid'];
-                console.log('Trackdesk CID found:', trackdeskCid);
+                var trakdeskCid = JSON.parse(cookie.pop());
+                var cid = trakdeskCid['cid'];
+                console.log('Trackdesk CID found:', cid);
+                
+                document.querySelectorAll('a[href^="https://buy.stripe.com/"]').forEach(function (a) {
+                    var originalUrl = a.href;
+                    var url = new URL(a.href);
+                    url.searchParams.set('client_reference_id', cid);
+                    a.href = url.href;
+                    console.log('Payment link updated:', originalUrl, '→', a.href);
+                });
             } catch (e) {
                 console.log('Trackdesk error:', e);
             }
+        } else {
+            console.log('No Trackdesk CID cookie found');
         }
-        
-        // Get Affiliate Metadata
-        var affiliateData = window.getAffiliateMetadata ? window.getAffiliateMetadata() : {};
-        var affiliateId = affiliateData.affiliateId || null;
-        if (affiliateId) {
-            console.log('Affiliate ID found:', affiliateId);
-        }
-        
-        // Update all Stripe links
-        document.querySelectorAll('a[href^="https://buy.stripe.com/"]').forEach(function (a) {
-            var originalUrl = a.href;
-            var url = new URL(a.href);
-            
-            // Affiliate ID takes priority for client_reference_id (for sales attribution)
-            if (affiliateId) {
-                url.searchParams.set('client_reference_id', affiliateId);
-                console.log('Added affiliate ID to Stripe link:', affiliateId);
-            } else if (trackdeskCid) {
-                // Fallback to Trackdesk CID if no affiliate ID
-                url.searchParams.set('client_reference_id', trackdeskCid);
-            }
-            
-            // Also add affiliate_id as a separate parameter for tracking
-            if (affiliateId) {
-                url.searchParams.set('affiliate_id', affiliateId);
-            }
-            
-            a.href = url.href;
-            console.log('Payment link updated:', originalUrl, '→', a.href);
-        });
     })();
     </script>
     <!-- Trackdesk set client_reference_id help fuction end -->
 </body>
-</html> 
+</html>

@@ -29,146 +29,41 @@
         }
     </script>
     
-    <!-- Affiliate Tracking Script - Stores ref and sends tracking event -->
-    <script>
-    (function () {
-      'use strict';
-
-      // ==============================
-      // CONFIG (only edit these)
-      // ==============================
-      var TRACKING_ENDPOINT = 'https://clipson-affiliates.vercel.app/api/track/click';
-      var COOKIE_DAYS = 30;
-      var STORAGE_KEY = '__affiliate_data__';
-      var SESSION_KEY = '__affiliate_click_sent__';
-      var CAMPAIGN_ID = '1770600294862';
-
-      // ==============================
-      // HELPERS
-      // ==============================
-      function now() {
-        return Date.now();
-      }
-
-      function parseJSON(value) {
-        try { return JSON.parse(value); } catch { return null; }
-      }
-
-      function getStoredAffiliate() {
-        var raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return null;
-
-        var data = parseJSON(raw);
-        if (!data || now() > data.expiresAt) {
-          localStorage.removeItem(STORAGE_KEY);
-          return null;
-        }
-        return data;
-      }
-
-      function saveAffiliate(data) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      }
-
-      function getParam(name) {
-        return new URLSearchParams(window.location.search).get(name);
-      }
-
-      // ==============================
-      // MAIN LOGIC
-      // ==============================
-
-      // Cleanup expired data
-      getStoredAffiliate();
-
-      var affiliateId = getParam('ref');
-
-      // Only fire once per session
-      if (affiliateId && !sessionStorage.getItem(SESSION_KEY)) {
-        sessionStorage.setItem(SESSION_KEY, '1');
-
-        var payload = {
-          campaignId: CAMPAIGN_ID,
-          affiliateId: affiliateId,
-          url: window.location.href,
-          landingPage: window.location.href,
-          referrer: document.referrer || null,
-          userAgent: navigator.userAgent,
-          language: navigator.language,
-          screen: window.screen.width + 'x' + window.screen.height,
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          timestamp: new Date().toISOString(),
-          device: /Mobile|Android|iPhone|iPad/.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
-          country: null
-        };
-
-        // Persist affiliate attribution
-        saveAffiliate({
-          affiliateId: affiliateId,
-          firstTouch: now(),
-          expiresAt: now() + COOKIE_DAYS * 86400000
-        });
-
-        // First-party click tracking (hard to block)
-        fetch(TRACKING_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          keepalive: true
-        }).catch(function () {});
-      }
-
-      // ==============================
-      // STRIPE HELPER (GLOBAL)
-      // ==============================
-      window.getAffiliateMetadata = function () {
-        var data = getStoredAffiliate();
-        if (!data) return {};
-
-        return {
-          affiliateId: data.affiliateId,
-          affiliateFirstTouch: String(data.firstTouch)
-        };
-      };
-
-      // Legacy helper for backward compatibility
-      window.getAffiliateId = function() {
-        var data = getStoredAffiliate();
-        return data ? data.affiliateId : null;
-      };
-    })();
-    </script>
-    
-    <!-- Tracking Link Redirect Script (for non-ref paths) -->
+    <!-- Clipson Affiliate Tracking -->
     <script>
     (function() {
-      // Only run on your custom domain
-      if (window.location.hostname !== 'clipsonexclusive.com' && 
-          window.location.hostname !== 'www.clipsonexclusive.com') {
-        return;
-      }
+      // Only run on the client's domain
+      const hostname = window.location.hostname;
+      const domainMatch = hostname === 'clipsonexclusive.com' || hostname === 'www.clipsonexclusive.com';
+      if (!domainMatch) return;
 
-      // Skip redirect if there's a ref parameter (already handled above)
+      // Check for ?ref= parameter
       const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('ref')) {
-        return; // Don't redirect, let the tracking script handle it
-      }
-
-      // Get the current path (e.g., /ref=xxxx or /xxxxx)
-      const path = window.location.pathname;
+      const refParam = urlParams.get('ref');
       
-      // Skip if it's a root path or common paths
-      if (path === '/' || path.startsWith('/api/') || path.startsWith('/_next/')) {
-        return;
-      }
+      if (!refParam) return;
 
-      // Extract slug from path (remove leading slash)
-      const slug = path.substring(1);
-      
-      // If there's a slug, redirect to tracking server
-      if (slug && slug.length > 0) {
-        const trackingUrl = 'https://tracking-system-production-d23c.up.railway.app/' + slug + window.location.search;
-        window.location.href = trackingUrl;
+      // Set cookie on client's domain (90 days expiry)
+      // This cookie will be available when user reaches Stripe checkout
+      const expiryDays = 90;
+      const expiryDate = new Date();
+      expiryDate.setTime(expiryDate.getTime() + (expiryDays * 24 * 60 * 60 * 1000));
+      document.cookie = 'ca_affiliate_id=' + encodeURIComponent(refParam) + 
+        '; expires=' + expiryDate.toUTCString() + 
+        '; path=/' + 
+        '; SameSite=Lax' + 
+        (location.protocol === 'https:' ? '; Secure' : '');
+
+      // Optionally record click on tracking server (non-blocking)
+      const beaconUrl = 'https://www.clipsonaffiliates.com/track?ref=' + encodeURIComponent(refParam) + '&beacon=true';
+      if (navigator.sendBeacon) {
+        try {
+          navigator.sendBeacon(beaconUrl);
+        } catch(e) {
+          fetch(beaconUrl, { method: 'GET', keepalive: true, mode: 'no-cors' }).catch(() => {});
+        }
+      } else {
+        fetch(beaconUrl, { method: 'GET', keepalive: true, mode: 'no-cors' }).catch(() => {});
       }
     })();
     </script>
@@ -461,4 +356,4 @@
         }
     </script>
 </body>
-</html> 
+</html>
