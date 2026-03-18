@@ -124,4 +124,71 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(updatePriceIncreaseCountdown, 1000);
         updatePriceIncreaseCountdown();
     }
+
+    // ClipSon referral tracking (supports ?r= and ?ref=)
+    (function () {
+        const params = new URLSearchParams(window.location.search);
+        const referralCode = params.get('r') || params.get('ref');
+
+        // Always expose the object (Step 2 depends on it)
+        window.__clipson = window.__clipson || {};
+        if (referralCode) window.__clipson.referralCode = referralCode;
+
+        const STORAGE_KEY = '__clipson_referral__';
+        const SESSION_KEY = '__clipson_click_sent__';
+        const COOKIE_DAYS = 30;
+        const TRACKING_ENDPOINT = 'https://clipson-affiliates.vercel.app/api/track/click';
+        const CAMPAIGN_ID = '1770600294862';
+
+        const now = Date.now();
+        const storedRaw = localStorage.getItem(STORAGE_KEY);
+        let stored = null;
+        if (storedRaw) {
+            try { stored = JSON.parse(storedRaw); } catch { stored = null; }
+        }
+        if (stored && stored.expiresAt && now > stored.expiresAt) {
+            localStorage.removeItem(STORAGE_KEY);
+            stored = null;
+        }
+
+        // Persist latest referral if present
+        if (referralCode) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                referralCode,
+                firstTouch: stored?.firstTouch || now,
+                expiresAt: now + COOKIE_DAYS * 86400000
+            }));
+        }
+
+        // Ensure window.__clipson has the best-known code
+        const effectiveCode = referralCode || stored?.referralCode || null;
+        if (effectiveCode && !window.__clipson.referralCode) {
+            window.__clipson.referralCode = effectiveCode;
+        }
+
+        // Fire click once per session when landing with a referral code
+        if (referralCode && !sessionStorage.getItem(SESSION_KEY)) {
+            sessionStorage.setItem(SESSION_KEY, '1');
+
+            fetch(TRACKING_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    campaignId: CAMPAIGN_ID,
+                    affiliateId: referralCode,
+                    url: window.location.href,
+                    landingPage: window.location.href,
+                    referrer: document.referrer || null,
+                    userAgent: navigator.userAgent,
+                    language: navigator.language,
+                    screen: window.screen.width + 'x' + window.screen.height,
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    timestamp: new Date().toISOString(),
+                    device: /Mobile|Android|iPhone|iPad/.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+                    country: null
+                }),
+                keepalive: true
+            }).catch(() => {});
+        }
+    })();
 }); 
