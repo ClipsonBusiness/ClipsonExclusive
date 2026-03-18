@@ -6,9 +6,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const cookies = req.headers.cookie || '';
-    const cookieMatch = cookies.match(/(?:^|;\s*)ca_affiliate_id=([^;]*)/);
-    const affiliateId = cookieMatch ? decodeURIComponent(cookieMatch[1]) : null;
+    const { referralCode = '', campaignId = '' } = (req.body && typeof req.body === 'object') ? req.body : {};
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -21,9 +19,10 @@ module.exports = async (req, res) => {
       mode: 'payment',
       success_url: `${req.headers.origin || 'https://www.clipsonexclusive.com'}/?success=true`,
       cancel_url: `${req.headers.origin || 'https://www.clipsonexclusive.com'}/?canceled=true`,
-      metadata: affiliateId ? {
-        ca_affiliate_id: affiliateId,
-      } : {},
+      metadata: {
+        referralCode: referralCode || '',
+        campaignId: campaignId || '',
+      },
     });
 
     return res.status(200).json({ url: session.url });

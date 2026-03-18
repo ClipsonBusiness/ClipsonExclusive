@@ -10,53 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="images/clipson-logo.png">
     
-    <!-- Trackdesk tracker begin -->
-    <script async src="//cdn.trackdesk.com/tracking.js"></script> 
-    <script>
-    (function(t,d,k){(t[k]=t[k]||[]).push(d);t[d]=t[d]||t[k].f||function(){(t[d].q=t[d].q||[]).push(arguments)}})(window,"trackdesk","TrackdeskObject"); 
-    
-    trackdesk('clipson', 'click');
-    </script>
-    <!-- Trackdesk tracker end -->
-    
-    <!-- Clipson Affiliate Tracking -->
-    <script>
-    (function() {
-      // Only run on the client's domain
-      const hostname = window.location.hostname;
-      const domainMatch = hostname === 'clipsonexclusive.com' || hostname === 'www.clipsonexclusive.com';
-      if (!domainMatch) return;
-
-      // Check for ?ref= parameter
-      const urlParams = new URLSearchParams(window.location.search);
-      const refParam = urlParams.get('ref');
-      
-      if (!refParam) return;
-
-      // Set cookie on client's domain (90 days expiry)
-      // This cookie will be available when user reaches Stripe checkout
-      const expiryDays = 90;
-      const expiryDate = new Date();
-      expiryDate.setTime(expiryDate.getTime() + (expiryDays * 24 * 60 * 60 * 1000));
-      document.cookie = 'ca_affiliate_id=' + encodeURIComponent(refParam) + 
-        '; expires=' + expiryDate.toUTCString() + 
-        '; path=/' + 
-        '; SameSite=Lax' + 
-        (location.protocol === 'https:' ? '; Secure' : '');
-
-      // Optionally record click on tracking server (non-blocking)
-      const beaconUrl = 'https://www.clipsonaffiliates.com/track?ref=' + encodeURIComponent(refParam) + '&beacon=true';
-      if (navigator.sendBeacon) {
-        try {
-          navigator.sendBeacon(beaconUrl);
-        } catch(e) {
-          fetch(beaconUrl, { method: 'GET', keepalive: true, mode: 'no-cors' }).catch(() => {});
-        }
-      } else {
-        fetch(beaconUrl, { method: 'GET', keepalive: true, mode: 'no-cors' }).catch(() => {});
-      }
-    })();
-    </script>
 </head>
 <body id="top">
     
@@ -72,7 +25,7 @@
                 <a href="#wins" class="nav-link">Student Wins</a>
             </div>
             <div class="nav-right">
-                <a href="https://buy.stripe.com/5kQeVegCk6m417zaIj5gc0l" class="cta-button" target="_blank" rel="noopener">Join Now</a>
+                <a href="#" class="cta-button" data-clipson-checkout="membership">Join Now</a>
             </div>
         </nav>
     </header>
@@ -97,7 +50,7 @@
                 </iframe>
             </div>
 
-            <a href="https://buy.stripe.com/5kQeVegCk6m417zaIj5gc0l" class="cta-button large" target="_blank" rel="noopener">Join ClipSon Exclusive</a>
+            <a href="#" class="cta-button large" data-clipson-checkout="membership">Join ClipSon Exclusive</a>
 
             <div class="price-tag">
                 <span class="price">$3</span>
@@ -200,7 +153,7 @@
                     <li>📈 Community support</li>
                     <li>⚡ Faster payouts</li>
                 </ul>
-                <a href="https://buy.stripe.com/5kQeVegCk6m417zaIj5gc0l" class="cta-button large" target="_blank" rel="noopener">Join Now</a>
+                <a href="#" class="cta-button large" data-clipson-checkout="membership">Join Now</a>
                 <p class="guarantee">Cancel anytime, risk-free</p>
             </div>
         </section>
@@ -210,33 +163,8 @@
         <p>&copy; 2024 ClipSon Exclusive. All rights reserved.</p>
     </footer>
 
+    <script src="https://www.clipsonaffiliates.com/api/tracking-script/1770600294862"></script>
     <script src="script.js?v=1.3"></script>
     
-    <!-- Trackdesk set client_reference_id help fuction begin -->
-    <script>
-    (function () {
-        var cookie = document.cookie.match('(^|;)\\s*trakdesk_cid\\s*=\\s*([^;]+)');
-        if (Array.isArray(cookie)) {
-            try {
-                var trakdeskCid = JSON.parse(cookie.pop());
-                var cid = trakdeskCid['cid'];
-                console.log('Trackdesk CID found:', cid);
-                
-                document.querySelectorAll('a[href^="https://buy.stripe.com/"]').forEach(function (a) {
-                    var originalUrl = a.href;
-                    var url = new URL(a.href);
-                    url.searchParams.set('client_reference_id', cid);
-                    a.href = url.href;
-                    console.log('Payment link updated:', originalUrl, '→', a.href);
-                });
-            } catch (e) {
-                console.log('Trackdesk error:', e);
-            }
-        } else {
-            console.log('No Trackdesk CID cookie found');
-        }
-    })();
-    </script>
-    <!-- Trackdesk set client_reference_id help fuction end -->
 </body>
 </html>
