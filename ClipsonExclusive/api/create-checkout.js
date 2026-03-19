@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
       payment_method_types: ['card'],
       line_items: [
         {
-          price: 'price_1SxA7ELDafoVnYnRP2cB1iLA',
+          price: 'price_1T2qAJLDafoVnYnRnLfY6wMO',
           quantity: 1,
         },
       ],
